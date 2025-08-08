@@ -13,7 +13,7 @@ import '../css/Home.css';
 
 const Home = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState(''); 
+  const [error, setError] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard'); // default to dashboard
 
@@ -46,8 +46,8 @@ const Home = () => {
       {error && <ShowErrorLabel message={error} type="floating" />}
 
       <FontAwesomeIcon icon={faBars} className="hamburger-icon" onClick={toggleSidebar} />
-        {!isSidebarOpen && (
-       <span className="mobile-app-name">Expense Tracker</span>
+      {!isSidebarOpen && (
+        <span className="mobile-app-name">Expense Tracker</span>
       )}
 
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
@@ -71,12 +71,12 @@ const Home = () => {
             <span>Settings</span>
           </div>
         </div>
-          <div className="logout-section" onClick={handleLogout}>
-            <FontAwesomeIcon icon={faRightFromBracket} className="nav-icon" />
-            <span>Logout</span>
-          </div>
+        <div className="logout-section" onClick={handleLogout}>
+          <FontAwesomeIcon icon={faRightFromBracket} className="nav-icon" />
+          <span>Logout</span>
+        </div>
       </div>
-      
+
       {/* Content area will go here later */}
       <div className="main-content">
         {activeTab === 'dashboard' && <Dashboard />}

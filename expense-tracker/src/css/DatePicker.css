@@ -51,10 +51,6 @@
   transition: background-color 0.2s;
 }
 
-.dp-month-year:hover {
-  background-color: var(--color-blue-muted, #e1ebf8);
-}
-
 .datepicker-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -125,10 +121,6 @@
   padding: 0.25rem 0.5rem;
   border-radius: 6px;
   transition: background-color 0.2s;
-}
-
-.dp-today-btn:hover {
-  background-color: var(--color-blue-muted, #e1ebf8);
 }
 
 .dp-year-selection {

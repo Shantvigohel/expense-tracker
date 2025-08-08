@@ -133,7 +133,7 @@ const DatePicker = ({ selectedDate, onDateChange, className = "" }) => {
     return (
       <div className="dp-year-selection">
         <div className="dp-year-grid">{years}</div>
-        <button className="dp-today-btn" onClick={handleTodayClick}>
+        <button type="button" className="dp-today-btn" onClick={handleTodayClick}>
           Today
         </button>
       </div>
@@ -153,7 +153,7 @@ const DatePicker = ({ selectedDate, onDateChange, className = "" }) => {
       {showCalendar && (
         <div className="datepicker-popup">
           <div className="datepicker-header">
-            <button className="dp-nav-btn" onClick={handlePrevMonth}>
+            <button type="button" className="dp-nav-btn" onClick={handlePrevMonth}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -164,7 +164,7 @@ const DatePicker = ({ selectedDate, onDateChange, className = "" }) => {
               {currentMonth.getFullYear()}
             </div>
             
-            <button className="dp-nav-btn" onClick={handleNextMonth}>
+            <button type="button" className="dp-nav-btn" onClick={handleNextMonth}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                 <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -177,7 +177,7 @@ const DatePicker = ({ selectedDate, onDateChange, className = "" }) => {
             <>
               <div className="datepicker-grid">{renderDays()}</div>
               <div className="datepicker-footer">
-                <button className="dp-today-btn" onClick={handleTodayClick}>
+                <button type="button" className="dp-today-btn" onClick={handleTodayClick}>
                   Today
                 </button>
               </div>
