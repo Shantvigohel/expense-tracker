@@ -1,0 +1,21 @@
+.form-error {
+  background-color: #a6c4e1; /* pastel success color */
+  color: var(--color-text-dark);
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  text-align: center;
+  animation: fadeInSlide 0.3s ease;
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

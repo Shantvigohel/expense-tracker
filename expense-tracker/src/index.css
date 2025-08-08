@@ -1,0 +1,28 @@
+/* src/index.css */
+
+@import './css/variables.css';
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text-dark);
+}
+
+/* Hide scrollbars globally for WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background: transparent;
+}
+
+/* Optional: Hide scrollbar thumb explicitly */
+::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: none;     /* Hide scrollbar */
+  -ms-overflow-style: none;  /* For Internet Explorer and Edge (legacy) */
+}

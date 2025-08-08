@@ -1,0 +1,35 @@
+.floating-error {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--error-color, #df7d7a);
+  color: var(--color-off-white);
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+  animation: fadeInSlideY 0.3s ease;
+}
+
+@keyframes fadeInSlideY {
+  from {
+    opacity: 0;
+    top: 10px;  
+  }
+  to {
+    opacity: 1;
+    top: 20px;
+  }
+}
+
+/*-----------------media query------------------*/
+
+@media (max-width: 380px) {
+  .floating-error {
+    font-size: 0.8rem;
+    padding: 10px 14px;
+    top: 15px;
+  }
+}
