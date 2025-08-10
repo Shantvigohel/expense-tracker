@@ -8,7 +8,7 @@
   padding: 2rem;
   box-sizing: border-box;
   height: 100vh;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .home-container {

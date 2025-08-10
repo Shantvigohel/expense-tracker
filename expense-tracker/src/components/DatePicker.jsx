@@ -6,62 +6,10 @@ const DatePicker = ({ selectedDate, onDateChange }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [showYearSelection, setShowYearSelection] = useState(false);
   const [popupPosition, setPopupPosition] = useState('popup-below');
-  const [isMobile, setIsMobile] = useState(false);
-  const [inputValue, setInputValue] = useState('');
   const calendarRef = useRef(null);
-
-  // Check if screen is mobile size
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsMobile(window.innerWidth < 425);
-    };
-    
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
 
   // Parse the selected date or use today's date
   const parsedSelectedDate = selectedDate ? new Date(selectedDate) : new Date();
-
-  // Format date for display (dd/mm/yyyy)
-  const formatDateForDisplay = (dateStr) => {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return dateStr; // Return as-is if invalid
-    
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
-
-  // Parse dd/mm/yyyy format to yyyy-mm-dd
-  const parseDateFromInput = (inputStr) => {
-    if (!inputStr) return '';
-    
-    const parts = inputStr.split('/');
-    if (parts.length === 3) {
-      const day = parseInt(parts[0]);
-      const month = parseInt(parts[1]);
-      const year = parseInt(parts[2]);
-      
-      if (day >= 1 && day <= 31 && month >= 1 && month <= 12 && year >= 1900) {
-        const date = new Date(year, month - 1, day);
-        if (date.getDate() === day && date.getMonth() === month - 1 && date.getFullYear() === year) {
-          return date.toISOString().split("T")[0];
-        }
-      }
-    }
-    return null;
-  };
-
-  // Update input value when selectedDate changes
-  useEffect(() => {
-    if (isMobile) {
-      setInputValue(formatDateForDisplay(selectedDate));
-    }
-  }, [selectedDate, isMobile]);
 
   useEffect(() => {
     if (selectedDate) {
@@ -115,41 +63,8 @@ const DatePicker = ({ selectedDate, onDateChange }) => {
   };
 
   const handleInputClick = () => {
-    if (!isMobile) {
-      setPopupPosition(calculatePopupPosition());
-      setShowCalendar(!showCalendar);
-    }
-  };
-
-  // Handle manual input for mobile
-  const handleInputChange = (e) => {
-    if (isMobile) {
-      const value = e.target.value;
-      setInputValue(value);
-      
-      // Try to parse and update the date
-      const parsedDate = parseDateFromInput(value);
-      if (parsedDate) {
-        onDateChange(parsedDate);
-      }
-    }
-  };
-
-  const handleInputBlur = () => {
-    if (isMobile) {
-      // Validate and format the input on blur
-      const parsedDate = parseDateFromInput(inputValue);
-      if (parsedDate) {
-        setInputValue(formatDateForDisplay(parsedDate));
-      } else if (inputValue.trim() === '') {
-        // Clear if empty
-        onDateChange('');
-        setInputValue('');
-      } else {
-        // Reset to previous valid value if invalid
-        setInputValue(formatDateForDisplay(selectedDate));
-      }
-    }
+    setPopupPosition(calculatePopupPosition());
+    setShowCalendar(!showCalendar);
   };
 
   const daysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
@@ -269,15 +184,13 @@ const DatePicker = ({ selectedDate, onDateChange }) => {
     <div className="datepicker-container" ref={calendarRef}>
       <input
         type="text"
-        className={`expense-input ${isMobile ? 'mobile-date-input' : ''}`}
-        readOnly={!isMobile}
-        value={isMobile ? inputValue : (selectedDate || "")}
+        className="expense-input"
+        readOnly
+        value={selectedDate || ""}
         onClick={handleInputClick}
-        onChange={handleInputChange}
-        onBlur={handleInputBlur}
-        placeholder={isMobile ? "dd/mm/yyyy" : "Select date"}
+        placeholder="Select date"
       />
-      {showCalendar && !isMobile && (
+      {showCalendar && (
         <div className={`datepicker-popup ${popupPosition}`}>
           <div className="datepicker-header">
             <button type="button" className="dp-nav-btn" onClick={handlePrevMonth}>

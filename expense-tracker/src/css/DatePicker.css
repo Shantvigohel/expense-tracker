@@ -203,40 +203,50 @@
   font-weight: 600;
 }
 
-/* Mobile styles - screens smaller than 425px */
-@media screen and (max-width: 425px) {
-  /* Remove calendar icon and make it a regular text input */
-  .datepicker-container .expense-input.mobile-date-input {
-    background-image: none;
-    padding-right: 1rem;
-    cursor: text;
-  }
-  
-  /* Hide the popup completely on mobile */
+/* Mobile-responsive styles for DatePicker */
+@media (max-width: 425px) {
   .datepicker-popup {
-    display: none !important;
-  }
-  
-  /* Optional: Add a small hint for the date format */
-  .datepicker-container::after {
-    content: "DD/MM/YYYY";
+    width: 240px; /* Smaller width for mobile */
+    min-height: 240px; /* Reduced height */
+    padding: 0.5rem; /* Tighter padding */
+    transform: scale(0.9); /* Slightly scale down */
+    transform-origin: top left; /* Anchor to input field */
     position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
+    left: 0;
+    top: calc(100% + 5px); /* Position right below input */
+  }
+
+  /* Adjust calendar grid sizing */
+  .datepicker-grid {
+    min-height: calc(6 * 1.75rem); /* Smaller day cells */
+    gap: 1px; /* Tighter spacing */
+  }
+
+  /* Smaller text elements */
+  .dp-day, 
+  .dp-day-name {
+    padding: 0.25rem;
     font-size: 0.75rem;
-    color: #999;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s ease;
+  }
+
+  /* Compact header */
+  .datepicker-header {
+    margin-bottom: 0.5rem;
   }
   
-  .datepicker-container .expense-input.mobile-date-input:placeholder-shown + *,
-  .datepicker-container .expense-input.mobile-date-input:focus::after {
-    opacity: 0;
+  .dp-month-year {
+    font-size: 0.875rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  /* Smaller navigation buttons */
+  .dp-nav-btn {
+    padding: 0.25rem;
   }
   
-  .datepicker-container .expense-input.mobile-date-input:not(:placeholder-shown):not(:focus)::after {
-    opacity: 1;
+  /* Compact footer button */
+  .dp-today-btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
   }
 }

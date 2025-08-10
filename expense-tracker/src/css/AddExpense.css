@@ -135,3 +135,46 @@ select.expense-input:focus {
 .datepicker-container {
   width: 100%;
 }
+
+/* Mobile & small tablet adjustments */
+@media (max-width: 768px) {
+  .add-expense-container {
+    padding: 1rem; /* reduce outer padding */
+    align-items: center; /* top align for better usability on phones */
+  }
+
+  .expense-form-wrapper {
+    padding: 1.5rem; /* slightly less padding to save space */
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    max-width: 100%; /* take full width on small screens */
+  }
+
+  .expense-form-title {
+    font-size: 1.4rem; /* slightly smaller title */
+    margin-bottom: 1.5rem;
+  }
+
+  .expense-form {
+    gap: 1rem; /* slightly tighter spacing between fields */
+  }
+
+  .expense-input,
+  select.expense-input,
+  .datepicker-container .expense-input,
+  .expense-submit-btn {
+    font-size: 0.95rem; /* slight reduction for better fit */
+    padding: 0.75rem 0.9rem;
+    height: auto; /* allow natural height adjustment */
+  }
+
+  textarea.expense-input {
+    height: 60px; /* slightly shorter for mobile */
+  }
+
+  .expense-submit-btn {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+  }
+}
