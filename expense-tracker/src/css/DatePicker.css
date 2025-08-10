@@ -96,7 +96,6 @@
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
-
   /* New: lock grid height to 6 weeks */
   min-height: calc(6 * 2.25rem);
 }
@@ -202,4 +201,42 @@
   background-color: var(--color-blue-muted);
   color: black;
   font-weight: 600;
+}
+
+/* Mobile styles - screens smaller than 425px */
+@media screen and (max-width: 425px) {
+  /* Remove calendar icon and make it a regular text input */
+  .datepicker-container .expense-input.mobile-date-input {
+    background-image: none;
+    padding-right: 1rem;
+    cursor: text;
+  }
+  
+  /* Hide the popup completely on mobile */
+  .datepicker-popup {
+    display: none !important;
+  }
+  
+  /* Optional: Add a small hint for the date format */
+  .datepicker-container::after {
+    content: "DD/MM/YYYY";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    color: #999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  .datepicker-container .expense-input.mobile-date-input:placeholder-shown + *,
+  .datepicker-container .expense-input.mobile-date-input:focus::after {
+    opacity: 0;
+  }
+  
+  .datepicker-container .expense-input.mobile-date-input:not(:placeholder-shown):not(:focus)::after {
+    opacity: 1;
+  }
 }
