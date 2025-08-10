@@ -28,7 +28,7 @@
 
 @media (max-width: 380px) {
   .floating-error {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     padding: 10px 14px;
     top: 15px;
   }

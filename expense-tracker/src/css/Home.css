@@ -105,7 +105,7 @@
 @media screen and (max-width: 768px) {
   .sidebar {
     position: fixed;
-    height: 100vh;
+    height: 90%;
     top: 0;
     left: 0;
     transform: translateX(-100%);
@@ -161,7 +161,6 @@
   }
 
   .mobile-app-name {
-    /* Removed - no longer needed */
     display: none;
   }
 
