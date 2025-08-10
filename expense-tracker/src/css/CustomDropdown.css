@@ -115,3 +115,119 @@
   border-color: var(--color-blue-muted);
   box-shadow: 0 0 5px var(--color-blue-muted);
 }
+
+/* Open upward instead of downward */
+.custom-dropdown.open-up .dropdown-list {
+  top: auto;
+  bottom: calc(100% + 2px);
+  animation: dropdownFadeInUp 0.15s ease-out;
+}
+
+@keyframes dropdownFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tablet breakpoint - 768px and below */
+@media screen and (max-width: 768px) {
+  .dropdown-header {
+    padding: 0.9rem 1rem;
+    font-size: 1rem;
+    min-height: 20px;
+    border-radius: 8px;
+  }
+
+  .dropdown-icon {
+    font-size: 0.8rem;
+    margin-left: 0.75rem;
+  }
+
+  .dropdown-list {
+    border-radius: 8px;
+    max-height: 180px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .dropdown-option {
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+  }
+
+  /* Better touch targets */
+  .dropdown-option:active {
+    background-color: var(--color-blue-muted);
+    transform: scale(0.98);
+  }
+}
+
+/* Mobile breakpoint - 480px and below */
+@media screen and (max-width: 480px) {
+  .dropdown-header {
+    padding: 1rem;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    min-height: 18px;
+  }
+
+  .dropdown-icon {
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
+  }
+
+  .dropdown-list {
+    max-height: 160px;
+    border-radius: 8px;
+    /* Adjust positioning for small screens */
+    left: -2px;
+    width: calc(100% + 4px);
+  }
+
+  .dropdown-option {
+    padding: 1rem;
+    font-size: 0.95rem;
+    /* Better spacing for touch */
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .dropdown-option:last-child {
+    border-bottom: none;
+  }
+
+  /* Enhanced touch interactions */
+  .dropdown-option:active {
+    background-color: var(--color-blue-muted);
+    transform: none;
+  }
+
+  /* Improved scrolling for touch */
+  .dropdown-list {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Extra small screens - 320px and below */
+@media screen and (max-width: 320px) {
+  .dropdown-header {
+    padding: 0.85rem;
+    font-size: 0.9rem;
+  }
+
+  .dropdown-icon {
+    font-size: 0.8rem;
+  }
+
+  .dropdown-option {
+    padding: 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  .dropdown-list {
+    max-height: 140px;
+  }
+}

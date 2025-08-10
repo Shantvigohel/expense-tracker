@@ -17,7 +17,6 @@ const Home = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard'); // default to dashboard
 
-
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => setError(''), 1500);
@@ -40,16 +39,23 @@ const Home = () => {
     setIsSidebarOpen(prev => !prev);
   };
 
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
+  };
+
   return (
     <div className="home-container">
-
       {error && <ShowErrorLabel message={error} type="floating" />}
 
+      {/* Hamburger Icon */}
       <FontAwesomeIcon icon={faBars} className="hamburger-icon" onClick={toggleSidebar} />
-      {!isSidebarOpen && (
-        <span className="mobile-app-name">Expense Tracker</span>
-      )}
+      
+      {/* Mobile App Name - removed as requested */}
 
+      {/* Overlay - only show when sidebar is open on mobile */}
+      {isSidebarOpen && <div className="overlay" onClick={closeSidebar}></div>}
+
+      {/* Sidebar */}
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <h2 className="app-name">ExpenseTracker</h2>
 
@@ -77,7 +83,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Content area will go here later */}
+      {/* Content area */}
       <div className="main-content">
         {activeTab === 'dashboard' && <Dashboard />}
         {activeTab === 'add-expense' && <AddExpense />}

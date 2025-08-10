@@ -1,21 +1,57 @@
-/* Only keep the calendar popup styles */
+/* DatePicker.css */
+
+@import './variables.css';
+
+/* Container styling */
 .datepicker-container {
   position: relative;
   width: 100%;
 }
 
+/* Make sure DatePicker input inherits expense-input styling and adds calendar icon */
+.datepicker-container .expense-input {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z' fill='%23666'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px;
+  padding-right: 2.5rem;
+}
+
 .datepicker-popup {
   position: absolute;
-  top: calc(100% + 0.5rem);
-  left: 0;
-  background-color: #fff;
-  border: 1.5px solid var(--color-blue-muted, #c4d8f3);
-  border-radius: 12px;
-  padding: 1rem;
   z-index: 1000;
-  width: 100%;
-  max-width: 300px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  background: white;
+  border: 1px solid var(--color-blue-muted);
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  padding: 1rem;
+  width: 280px;
+  font-family: 'Inter', sans-serif;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.datepicker-popup.popup-above {
+  bottom: calc(100% + 4px);
+  left: 0;
+}
+
+.datepicker-popup.popup-below {
+  top: calc(100% + 4px);
+  left: 0;
+}
+
+.datepicker-popup.popup-center {
+  top: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.datepicker-popup.popup-right {
+  top: calc(100% + 4px);
+  right: 0;
 }
 
 .datepicker-header {
@@ -23,134 +59,184 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  font-weight: 500;
 }
 
 .dp-nav-btn {
   background: none;
   border: none;
+  cursor: pointer;
   padding: 0.5rem;
   border-radius: 6px;
-  cursor: pointer;
-  color: var(--color-text-dark, #333);
+  color: var(--color-text-dark);
+  transition: background-color 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.2s;
 }
 
 .dp-nav-btn:hover {
-  background-color: var(--color-blue-muted, #e1ebf8);
+  background-color: #f5f5f5;
 }
 
 .dp-month-year {
   font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text-dark);
   cursor: pointer;
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem 1rem;
   border-radius: 6px;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease;
+}
+
+.dp-month-year:hover {
+  background-color: #f5f5f5;
 }
 
 .datepicker-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.25rem;
+  gap: 2px;
+  /* New: lock grid height to 6 weeks */
+  min-height: calc(6 * 2.25rem);
 }
 
 .dp-day-name {
   text-align: center;
   font-size: 0.75rem;
   font-weight: 600;
-  color: var(--color-text-muted, #666);
-  padding: 0.25rem;
+  color: #666;
+  padding: 0.5rem;
+  text-transform: uppercase;
 }
 
 .dp-day {
   text-align: center;
   padding: 0.5rem;
-  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  border-radius: 6px;
   font-size: 0.875rem;
+  transition: all 0.2s ease;
+  color: var(--color-text-dark);
 }
 
-.dp-day:hover {
-  background-color: var(--color-blue-muted, #e1ebf8);
+.dp-day:not(.empty):hover {
+  background-color: #f0f8ff;
+  color: var(--color-blue-muted);
 }
 
 .dp-day.selected {
-  background-color: var(--color-blue-muted, #c4d8f3);
-  color: var(--color-text-dark, #333);
+  background-color: var(--color-blue-muted);
+  color: black;
   font-weight: 600;
 }
 
 .dp-day.today {
-  position: relative;
-  color: var(--color-blue-muted, #2a6fd6);
+  background-color: #e8f4fd;
+  color: var(--color-blue-muted);
   font-weight: 600;
 }
 
-.dp-day.today::after {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background-color: var(--color-blue-muted, #2a6fd6);
+.dp-day.today.selected {
+  background-color: var(--color-blue-muted);
+  color: black;
 }
 
 .dp-day.empty {
-  visibility: hidden;
+  cursor: default;
 }
 
 .datepicker-footer {
   margin-top: 1rem;
-  display: flex;
-  justify-content: flex-end;
+  text-align: center;
 }
 
 .dp-today-btn {
   background: none;
-  border: none;
-  color: var(--color-blue-muted, #2a6fd6);
-  font-weight: 500;
-  cursor: pointer;
-  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--color-blue-muted);
+  color: var(--color-blue-muted);
+  padding: 0.5rem 1rem;
   border-radius: 6px;
-  transition: background-color 0.2s;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 
+.dp-today-btn:hover {
+  background-color: var(--color-blue-muted);
+  color: black;
+}
+
+/* Year Selection */
 .dp-year-selection {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 .dp-year-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
-  max-height: 200px;
+  gap: 4px;
+  margin-bottom: 1rem;
+  max-height: 160px;
   overflow-y: auto;
 }
 
 .dp-year {
-  padding: 0.5rem;
   text-align: center;
+  padding: 0.5rem;
   cursor: pointer;
   border-radius: 6px;
-  transition: background-color 0.2s;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  color: var(--color-text-dark);
 }
 
 .dp-year:hover {
-  background-color: var(--color-blue-muted, #e1ebf8);
+  background-color: #f0f8ff;
+  color: var(--color-blue-muted);
 }
 
 .dp-year.selected {
-  background-color: var(--color-blue-muted, #c4d8f3);
-  color: var(--color-text-dark, #333);
+  background-color: var(--color-blue-muted);
+  color: black;
   font-weight: 600;
+}
+
+/* Mobile styles - screens smaller than 425px */
+@media screen and (max-width: 425px) {
+  /* Remove calendar icon and make it a regular text input */
+  .datepicker-container .expense-input.mobile-date-input {
+    background-image: none;
+    padding-right: 1rem;
+    cursor: text;
+  }
+  
+  /* Hide the popup completely on mobile */
+  .datepicker-popup {
+    display: none !important;
+  }
+  
+  /* Optional: Add a small hint for the date format */
+  .datepicker-container::after {
+    content: "DD/MM/YYYY";
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    color: #999;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  .datepicker-container .expense-input.mobile-date-input:placeholder-shown + *,
+  .datepicker-container .expense-input.mobile-date-input:focus::after {
+    opacity: 0;
+  }
+  
+  .datepicker-container .expense-input.mobile-date-input:not(:placeholder-shown):not(:focus)::after {
+    opacity: 1;
+  }
 }

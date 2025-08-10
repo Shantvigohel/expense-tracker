@@ -43,6 +43,7 @@
   gap: 1.25rem;
 }
 
+/* Base input styling that applies to all form inputs */
 .expense-input {
   padding: 0.85rem 1rem;
   border-radius: 10px;
@@ -51,6 +52,23 @@
   background-color: #fff;
   color: var(--color-text-dark);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Ensure DatePicker container takes full width and input inherits proper styling */
+.datepicker-container {
+  width: 100%;
+}
+
+.datepicker-container .expense-input {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='16' height='16' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z' fill='%23666'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px;
+  padding-right: 2.5rem;
 }
 
 .expense-input:focus {
@@ -59,6 +77,16 @@
   box-shadow: 0 0 5px var(--color-blue-muted);
 }
 
+/* Specific styling for textarea */
+textarea.expense-input {
+  resize: none;                
+  height: 70px;               
+  overflow-y: auto;           
+  overflow-x: hidden;          
+  line-height: 1.4;       
+}
+
+/* Submit button styling */
 .expense-submit-btn {
   padding: 0.85rem;
   background-color: var(--color-blue-muted);
@@ -69,36 +97,21 @@
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: 'Inter', sans-serif;
 }
 
 .expense-submit-btn:hover {
   background-color: #b6d0e9;
 }
 
-textarea.expense-input {
-  resize: none;                
-  height: 70px;               
-  overflow-y: auto;           
-  overflow-x: hidden;          
-  line-height: 1.4;       
-}
-
-
-/* removing the default things */
-
-/* Hide arrows in input[type="number"] for Chrome, Safari, Edge */
+/* Remove default number input arrows */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/* Hide arrows for Firefox */
-/* input[type="number"] {
-  -moz-appearance: textfield;
-} */
-
-/* Custom dropdown styling */
+/* Custom dropdown styling - this applies to select elements */
 select.expense-input {
   appearance: none;
   -webkit-appearance: none;
@@ -118,3 +131,7 @@ select.expense-input:focus {
   outline: none;
 }
 
+/* Ensure DatePicker container takes full width */
+.datepicker-container {
+  width: 100%;
+}

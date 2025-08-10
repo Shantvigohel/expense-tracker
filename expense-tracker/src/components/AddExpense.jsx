@@ -46,9 +46,11 @@ const AddExpense = () => {
     const { title, category, amount, date } = form;
 
     if (!title || !category || !amount || !date) {
-      setError('Please fill in all required fields.');
+      setError(`Please fill in all required fields.`); // unique value each time
+      setTimeout(() => setError(''), 2000);
       return;
     }
+
 
     const user = auth.currentUser;
     if (!user) {
@@ -118,11 +120,10 @@ const AddExpense = () => {
             onChange={handleChange}
             className="expense-input"
             min="0"
-            step="0.01" 
+            step="0.01"
           />
 
           <DatePicker
-            className="Datepicker"
             selectedDate={form.date}
             onDateChange={(value) => setForm({ ...form, date: value })}
           />

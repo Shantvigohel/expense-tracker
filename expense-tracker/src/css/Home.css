@@ -1,5 +1,3 @@
-/* Home.css  */
-
 @import './variables.css';
 
 .main-content {
@@ -95,24 +93,27 @@
 }
 
 .mobile-app-name {
-  position: fixed;
-  top: 1rem;
-  left: 3rem;
-  font-size: 1.4rem;
-  font-family: 'Poppins', sans-serif;
-  color: var(--color-off-white);
-  z-index: 2000;
+  display: none;
 }
 
+/* Overlay for mobile sidebar */
+.overlay {
+  display: none;
+}
 
-/*Sidebar hidden on mobile by default */
-@media screen and (max-width: 380px) {
+/* Tablet breakpoint - 768px and below */
+@media screen and (max-width: 768px) {
   .sidebar {
     position: fixed;
-    height: 90%;
+    height: 100vh;
+    top: 0;
+    left: 0;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;
-    z-index: 999;
+    z-index: 1001;
+    border-radius: 0;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
   }
 
   .sidebar.open {
@@ -125,10 +126,46 @@
     top: 1rem;
     left: 1rem;
     font-size: 1.5rem;
-    z-index: 2000;
+    z-index: 1002;
     cursor: pointer;
     color: var(--color-text-darkbg);
   }
+
+  .mobile-app-name {
+    /* Removed - no longer needed */
+    display: none;
+  }
+
+  .overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 1000;
+  }
+
+  .main-content {
+    padding: 1rem;
+    margin-left: 0;
+  }
 }
 
+/* Mobile breakpoint - 480px and below */
+@media screen and (max-width: 480px) {
+  .main-content {
+    padding: 0.5rem;
+  }
 
+  .mobile-app-name {
+    /* Removed - no longer needed */
+    display: none;
+  }
+
+  .sidebar {
+    width: 280px;
+  }
+}
