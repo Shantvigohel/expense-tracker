@@ -1,0 +1,336 @@
+/* Budgets & Goals page */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
+
+.budgets-container {
+    flex: 1;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0rem 1.5rem 1.5rem;
+    /* Reduced padding */
+    /* Increased top and bottom padding */
+    box-sizing: border-box;
+    font-family: 'Inter', 'Poppins', sans-serif;
+}
+
+/* Ensure inner content remains centered inside the main area */
+.budgets-container,
+.budgets-content,
+.expenses-card {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.budgets-header {
+    background: var(--color-background);
+    color: #fff;
+    padding: 1rem 1.25rem;
+    /* Increased padding */
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    /* Added space below header */
+}
+
+.budgets-header h1 {
+    margin: 0 0 0.5rem 0;
+    /* Increased bottom margin */
+    font-size: 1.5rem;
+    /* Larger font size */
+    letter-spacing: 0.1px;
+    font-weight: 600;
+}
+
+.budgets-header p {
+    margin: 0;
+    opacity: 0.85;
+    font-size: 0.875rem;
+    /* Slightly larger */
+}
+
+.budgets-content {
+    margin-top: 1rem;
+    /* Increased top margin */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* Increased gap */
+}
+
+/* Goal cards */
+.goal-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 1.25rem;
+    /* Increased padding */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.goal-content h3 {
+    margin: 0 0 0.5rem 0;
+    /* Increased bottom margin */
+    font-size: 1.1rem;
+    /* Larger font size */
+    color: var(--color-text-dark);
+    font-weight: 500;
+}
+
+.goal-info {
+    margin: 0;
+    font-size: 0.875rem;
+    /* Slightly larger */
+    color: var(--color-muted-text);
+}
+
+.goal-button {
+    min-width: 90px;
+    /* Slightly wider */
+    height: 36px;
+    /* Taller */
+    border-radius: 18px;
+    border: none;
+    color: #333;
+    background: var(--color-pink);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    /* Larger text */
+}
+
+/* Expenses card */
+.expenses-card {
+    background: #ffffff;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 50vh;
+    /* Added max-height to prevent card from being too tall */
+}
+
+.expenses-title {
+    margin: 0;
+    padding: 1rem 1.25rem;
+    /* Increased padding */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    font-size: 1.1rem;
+    /* Larger font size */
+    color: var(--color-text-dark);
+    font-weight: 500;
+}
+
+/* Fixed-height scrollable list */
+/* Updated Expenses List Section */
+.expenses-list {
+    max-height: 40vh;
+    overflow-y: auto;
+    background: var(--color-off-white);
+    padding: 0.75rem;
+    border-radius: 0 0 10px 10px;
+    /* Hide scrollbar for all browsers */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE and Edge */
+}
+
+/* Hide scrollbar for WebKit browsers */
+.expenses-list::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
+}
+
+/* Ensure scrolling still works */
+.expenses-list {
+    -webkit-overflow-scrolling: touch;
+}
+
+.expenses-list::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.expense-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+    padding: 1rem;
+    /* Increased padding */
+    margin: 0.5rem 0;
+    /* Adjusted margin */
+}
+
+.expense-details {
+    min-width: 0;
+    /* allow text truncation */
+}
+
+.expense-title {
+    margin: 0 0 0.5rem 0;
+    /* Increased bottom margin */
+    font-size: 1rem;
+    /* Larger font size */
+    color: var(--color-text-dark);
+    font-weight: 500;
+}
+
+.expense-meta {
+    margin: 0;
+    font-size: 0.875rem;
+    /* Slightly larger */
+    color: var(--color-muted-text);
+}
+
+.expense-amount {
+    white-space: nowrap;
+    font-weight: 700;
+    color: #5f6e6e;
+    font-size: 1rem;
+    /* Larger font size */
+}
+
+.loading,
+.no-expenses {
+    padding: 1.5rem;
+    /* Increased padding */
+    color: var(--color-muted-text);
+    text-align: center;
+    font-size: 1rem;
+    /* Larger font size */
+}
+
+/* Modals */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    background: #fff;
+    width: 95%;
+    max-width: 460px;
+    border-radius: 12px;
+    padding: 1.5rem;
+    /* Increased padding */
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+    font-family: 'Inter', 'Poppins', sans-serif;
+}
+
+.modal h3 {
+    margin: 0 0 1rem 0;
+    /* Increased bottom margin */
+    text-align: center;
+    font-size: 1.25rem;
+    /* Larger font size */
+    font-weight: 600;
+}
+
+.modal p {
+    margin: 0 0 1.5rem 0;
+    /* Increased bottom margin */
+    color: var(--color-muted-text);
+    font-size: 1rem;
+    /* Larger font size */
+    text-align: center;
+}
+
+.modal-input {
+    width: 100%;
+    height: 46px;
+    /* Taller */
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    padding: 0 1rem;
+    /* Increased padding */
+    outline: none;
+    font-size: 1rem;
+    /* Larger font size */
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    /* Increased gap */
+    justify-content: center;
+    margin-top: 1.5rem;
+    /* Increased top margin */
+}
+
+.modal-cancel,
+.modal-submit {
+    height: 42px;
+    /* Taller */
+    padding: 0 1.5rem;
+    /* Increased padding */
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    min-width: 120px;
+    font-size: 0.95rem;
+    /* Larger text */
+}
+
+.modal-cancel {
+    background: #eef1f1;
+    font-weight: 500;
+}
+
+.modal-submit {
+    background: var(--color-pink);
+    font-weight: 600;
+}
+
+@media (max-width: 720px) {
+    .budgets-container {
+        padding: 1.25rem;
+        /* Increased padding for mobile */
+    }
+
+    .budgets-header h1 {
+        font-size: 1.3rem;
+        /* Adjusted for mobile */
+    }
+
+    .goal-content h3,
+    .expenses-title {
+        font-size: 1rem;
+        /* Adjusted for mobile */
+    }
+
+    .expenses-card {
+        max-height: 45vh;
+        /* Slightly smaller on mobile */
+    }
+
+    .expenses-list {
+        max-height: 35vh;
+        /* Slightly smaller on mobile */
+    }
+}
+
+@media (max-height: 700px) {
+    .expenses-card {
+        max-height: 40vh;
+        /* Even smaller on short screens */
+    }
+
+    .expenses-list {
+        max-height: 30vh;
+        /* Even smaller on short screens */
+    }
+}

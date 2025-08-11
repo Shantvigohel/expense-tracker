@@ -77,10 +77,6 @@ const Home = () => {
             <span>Settings</span>
           </div>
         </div>
-        <div className="logout-section" onClick={handleLogout}>
-          <FontAwesomeIcon icon={faRightFromBracket} className="nav-icon" />
-          <span>Logout</span>
-        </div>
       </div>
 
       {/* Content area */}

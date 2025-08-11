@@ -1,0 +1,185 @@
+/* Settings.css */
+@import './variables.css';
+
+.settings-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--color-background);
+  font-family: 'Inter', sans-serif;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.settings-card {
+  background-color: var(--color-off-white);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 300px;
+  box-sizing: border-box;
+}
+
+.settings-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--color-text-dark);
+  margin-bottom: 1.5rem;
+  text-align: center; /* Centered title */
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-info p {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  color: var(--color-text-dark);
+}
+
+.user-info strong {
+  font-weight: 600;
+  color: var(--color-text-darkbg);
+}
+
+.logout-btn {
+  align-self: flex-end;
+  margin-top: auto;
+  padding: 0.75rem 1.2rem;
+  background-color: var(--color-pink);
+  color: black;
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.logout-btn:hover {
+  background-color: #ffb6b6;
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Modal box */
+.modal-box {
+  background-color: var(--color-off-white);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  text-align: center;
+  width: 100%;
+  max-width: 350px;
+}
+
+.modal-box p {
+  font-size: 1rem;
+  color: var(--color-text-dark);
+  margin-bottom: 1.5rem;
+}
+
+/* Modal buttons */
+.modal-actions {
+  display: flex;
+  flex-wrap: wrap; /* Allows buttons to stack on small screens */
+  justify-content: center;
+  gap: 1rem;
+}
+
+.modal-btn {
+  flex: 1;
+  min-width: 100px;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-btn.yes {
+  background-color: var(--color-pink);
+  color: black;
+}
+
+.modal-btn.yes:hover {
+  background-color: #ffb6b6;
+}
+
+.modal-btn.no {
+  background-color: var(--color-blue-muted);
+  color: black;
+}
+
+.modal-btn.no:hover {
+  background-color: #b6d0e9;
+}
+
+/* Tablet breakpoint - 768px and below */
+@media screen and (max-width: 768px) {
+  .settings-container {
+    padding: 1.5rem;
+  }
+
+  .settings-card {
+    padding: 1.5rem;
+    min-height: 260px;
+  }
+
+  .settings-title {
+    font-size: 1.4rem;
+  }
+
+  .logout-btn {
+    font-size: 0.9rem;
+    padding: 0.65rem 1rem;
+    align-self: stretch; /* Full width on mobile for easier tapping */
+    text-align: center;
+  }
+
+  .modal-box {
+    padding: 1.5rem;
+    max-width: 300px;
+  }
+}
+
+/* Mobile breakpoint - 480px and below */
+@media screen and (max-width: 480px) {
+  .modal-box {
+    padding: 1rem;
+    width: 95%;
+  }
+
+  .modal-btn {
+    flex: 1 1 100%; /* Force buttons to stack vertically */
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+}
