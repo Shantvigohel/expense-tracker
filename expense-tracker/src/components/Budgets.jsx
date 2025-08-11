@@ -93,6 +93,27 @@ const Budgets = () => {
     setShowSavingModal(false);
   };
 
+  const handleKeyPress = (e, submitFunction) => {
+    if (e.key === 'Enter') {
+      submitFunction();
+    }
+  };
+
+  const handleEscape = (e) => {
+    if (e.key === 'Escape') {
+      setShowEarningModal(false);
+      setShowSavingModal(false);
+    }
+  };
+
+  // Add keyboard event listener for escape key
+  useEffect(() => {
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, []);
+
   return (
     <div className="budgets-container">
       <div className="budgets-header">
@@ -161,6 +182,8 @@ const Budgets = () => {
               step="0.01"
               value={earningAmount}
               onChange={(e) => setEarningAmount(e.target.value)}
+              onKeyPress={(e) => handleKeyPress(e, handleSubmitEarning)}
+              autoFocus
             />
             <div className="modal-buttons">
               <button className="modal-cancel" onClick={() => setShowEarningModal(false)}>Cancel</button>
@@ -184,6 +207,8 @@ const Budgets = () => {
               step="0.01"
               value={savingAmount}
               onChange={(e) => setSavingAmount(e.target.value)}
+              onKeyPress={(e) => handleKeyPress(e, handleSubmitSaving)}
+              autoFocus
             />
             <div className="modal-buttons">
               <button className="modal-cancel" onClick={() => setShowSavingModal(false)}>Cancel</button>

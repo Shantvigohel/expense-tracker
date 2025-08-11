@@ -4,10 +4,10 @@
   flex: 1;
   display: flex;
   justify-content: center; /* keep horizontal centering */
-  align-items: flex-start;  /* align content to the top */
+  align-items: center;  /* align content to the top */
   padding: 2rem;
   box-sizing: border-box;
-  height: 100vh;
+  height: 100%;
   overflow-y: hidden;
 }
 
