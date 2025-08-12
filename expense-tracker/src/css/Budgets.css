@@ -23,10 +23,8 @@
     background: var(--color-background);
     color: #fff;
     padding: 1rem 1.25rem;
-    /* Increased padding */
     border-radius: 10px;
     margin-bottom: 1rem;
-    /* Added space below header */
 }
 
 .budgets-header h1 {
@@ -91,11 +89,15 @@
     border-radius: 12px;
     border: none;
     color: #333;
-    background: var(--color-pink);
+    background: var(--color-blue-muted);
     cursor: pointer;
     font-weight: 600;
     font-size: 0.9rem;
     /* Larger text */
+}
+
+.goal-button:hover{
+    background: #bcd9f5;
 }
 
 /* Expenses card */
@@ -296,7 +298,7 @@
 
 .modal-cancel {
     background: #f5f5f5;
-    color: #666;
+    color: #343133;
     border: 1px solid #e0e0e0;
 }
 
@@ -305,12 +307,12 @@
 }
 
 .modal-submit {
-    background: var(--color-pink);
-    color: #625b5f;
+    background: var(--color-blue-muted);
+    color: #343133;
 }
 
 .modal-submit:hover {
-    background: #f0b8b7;
+    background: #bcd9f5;
 }
 
 /* Modal animations */
@@ -334,9 +336,163 @@
     }
 }
 
+/* Expense Popup Styles */
+.expense-popup {
+    max-width: 500px;
+    width: 95%;
+    padding: 0;
+    overflow: hidden;
+}
+
+.expense-popup-header {
+    /* background: var(--color-background); */
+    color: var(--color-text-dark);
+    padding: 1.5rem 2rem 1.5rem 2rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.expense-popup-header h3 {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    text-align: left;
+}
+
+.expense-popup-close {
+    background: none;
+    border: none;
+    color: var(--color-text-dark);
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+
+.expense-popup-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.expense-popup-content {
+    padding: 2rem;
+    background: #fff;
+}
+
+.expense-popup-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.expense-popup-row:last-of-type {
+    border-bottom: none;
+}
+
+.expense-popup-label {
+    font-weight: 600;
+    color: var(--color-text-dark);
+    font-size: 0.95rem;
+    min-width: 120px;
+    margin-right: 1rem;
+}
+
+.expense-popup-value {
+    color: var(--color-muted-text);
+    font-size: 0.95rem;
+    text-align: right;
+    flex: 1;
+    word-break: break-word;
+}
+
+.expense-popup-amount {
+    color: #5f6e6e;
+    font-weight: 700;
+    font-size: 1.1rem;
+    text-align: right;
+}
+
+.expense-popup-notes {
+    text-align: right;
+    max-width: 200px;
+    line-height: 1.4;
+}
+
+.expense-popup-footer {
+    padding: 1.5rem 2rem;
+    background: #fafafa;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    display: flex;
+    justify-content: center;
+}
+
+.expense-popup-close-btn {
+    background: var(--color-blue-muted);
+    color: #343133;
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    min-width: 120px;
+}
+
+.expense-popup-close-btn:hover {
+    background: #bcd9f5;
+}
+
+/* Delete button styling to match theme */
+.expense-popup-delete-btn {
+    background: #f5d2d2;
+    color: #4a3b3b;
+    border: 1px solid #efb5b5;
+    border-radius: 12px;
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    min-width: 120px;
+    margin-right: 0.75rem;
+}
+
+.expense-popup-delete-btn:hover {
+    background: #efb5b5;
+}
+
+.expense-popup-delete-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* Make expense items more interactive */
+.expense-item {
+    transition: all 0.2s ease;
+}
+
+.expense-item:hover {
+    background: #f8f9fa;
+    border-color: rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
 @media (max-width: 720px) {
     .budgets-container {
         padding: 1.25rem;
+        
         /* Increased padding for mobile */
     }
 
@@ -396,6 +552,48 @@
         min-width: 100px;
         font-size: 0.95rem;
     }
+
+    /* Expense popup mobile styles */
+    .expense-popup {
+        width: 95%;
+        max-width: 450px;
+    }
+
+    .expense-popup-header {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .expense-popup-header h3 {
+        font-size: 1.2rem;
+    }
+
+    .expense-popup-content {
+        padding: 1.5rem;
+    }
+
+    .expense-popup-row {
+        padding: 0.75rem 0;
+    }
+
+    .expense-popup-label {
+        font-size: 0.9rem;
+        min-width: 100px;
+        margin-right: 0.75rem;
+    }
+
+    .expense-popup-value {
+        font-size: 0.9rem;
+    }
+
+    .expense-popup-footer {
+        padding: 1.25rem 1.5rem;
+    }
+
+    .expense-popup-close-btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.95rem;
+        min-width: 100px;
+    }
 }
 
 /* Very small screens */
@@ -431,6 +629,58 @@
         height: 42px;
         min-width: auto;
     }
+
+    /* Expense popup very small screen styles */
+    .expense-popup {
+        width: 98%;
+        max-width: 350px;
+    }
+
+    .expense-popup-header {
+        padding: 1rem 1.25rem;
+    }
+
+    .expense-popup-header h3 {
+        font-size: 1.1rem;
+    }
+
+    .expense-popup-content {
+        padding: 1.25rem;
+    }
+
+    .expense-popup-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .expense-popup-label {
+        min-width: auto;
+        margin-right: 0;
+        font-size: 0.85rem;
+    }
+
+    .expense-popup-value,
+    .expense-popup-amount {
+        text-align: left;
+        font-size: 0.9rem;
+    }
+
+    .expense-popup-notes {
+        text-align: left;
+        max-width: none;
+    }
+
+    .expense-popup-footer {
+        padding: 1rem 1.25rem;
+    }
+
+    .expense-popup-close-btn {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        min-width: auto;
+    }
 }
 
 @media (max-height: 700px) {
@@ -440,7 +690,7 @@
     }
 
     .expenses-list {
-        max-height: 30vh;
+        max-height: 40vh;
         /* Even smaller on short screens */
     }
 }

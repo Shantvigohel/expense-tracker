@@ -4,11 +4,14 @@
   flex: 1;
   display: flex;
   justify-content: center; /* keep horizontal centering */
-  align-items: center;  /* align content to the top */
-  padding: 2rem;
+  align-items: flex-start;  /* align content to the top */
+  padding: 2rem 2rem 2rem 2rem; /* top, right, bottom, left */
+  padding-top: 4rem; /* extra top padding to prevent title cutting */
+  padding-bottom: 4rem; /* extra bottom padding for balance */
   box-sizing: border-box;
   height: 100%;
-  overflow-y: hidden;
+  overflow-y: auto; /* allow vertical scrolling when needed */
+  overflow-x: hidden; /* prevent horizontal scrolling */
 }
 
 .home-container {
@@ -150,7 +153,9 @@
 
   .main-content {
     padding: 1rem;
+    padding-top: 3.5rem; /* offset hamburger icon; prevents overlap */
     margin-left: 0;
+    align-items: flex-start; /* keep content from centering vertically */
   }
 }
 
@@ -158,7 +163,9 @@
 @media screen and (max-width: 480px) {
   .main-content {
     padding: 0.5rem;
+    padding-top: 3.5rem; /* extra top space under hamburger */
     overflow-y: auto;
+    align-items: flex-start;
   }
 
   .mobile-app-name {

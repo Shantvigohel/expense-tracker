@@ -71,18 +71,37 @@ const DatePicker = ({ selectedDate, onDateChange }) => {
   const firstDayOfMonth = (month, year) => new Date(year, month, 1).getDay();
 
   const handleDateSelect = (day) => {
+    // Fix timezone issue: Create date at noon local time to avoid timezone shifts
     const selected = new Date(
       currentMonth.getFullYear(),
       currentMonth.getMonth(),
-      day
+      day,
+      12, // Set to noon (12:00) to avoid timezone issues
+      0,  // minutes
+      0,  // seconds
+      0   // milliseconds
     );
-    onDateChange(selected.toISOString().split("T")[0]);
+    
+    // Format date as YYYY-MM-DD without timezone conversion
+    const year = selected.getFullYear();
+    const month = String(selected.getMonth() + 1).padStart(2, '0');
+    const dayStr = String(selected.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${dayStr}`;
+    
+    onDateChange(dateString);
     setShowCalendar(false);
   };
 
   const handleTodayClick = () => {
     const today = new Date();
-    onDateChange(today.toISOString().split("T")[0]);
+    
+    // Format today's date as YYYY-MM-DD without timezone conversion
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const dateString = `${year}-${month}-${day}`;
+    
+    onDateChange(dateString);
     setCurrentMonth(today);
     setShowCalendar(false);
   };
@@ -131,8 +150,14 @@ const DatePicker = ({ selectedDate, onDateChange }) => {
     // Add days of the month
     for (let day = 1; day <= totalDays; day++) {
       const currentDate = new Date(year, month, day);
-      const isSelected =
-        selectedDate === currentDate.toISOString().split("T")[0];
+      
+      // Format current date for comparison (timezone-safe)
+      const currentYear = currentDate.getFullYear();
+      const currentMonthStr = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const currentDayStr = String(currentDate.getDate()).padStart(2, '0');
+      const currentDateString = `${currentYear}-${currentMonthStr}-${currentDayStr}`;
+      
+      const isSelected = selectedDate === currentDateString;
       const isToday =
         today.getDate() === day &&
         today.getMonth() === month &&

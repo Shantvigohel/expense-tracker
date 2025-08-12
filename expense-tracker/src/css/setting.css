@@ -55,7 +55,7 @@
   align-self: flex-end;
   margin-top: auto;
   padding: 0.75rem 1.2rem;
-  background-color: var(--color-pink);
+  background-color: var(--color-blue-muted);
   color: black;
   font-weight: 600;
   font-size: 0.95rem;
@@ -67,7 +67,7 @@
 }
 
 .logout-btn:hover {
-  background-color: #ffb6b6;
+  background-color: #bcd9f5;
 }
 
 /* Modal overlay */
