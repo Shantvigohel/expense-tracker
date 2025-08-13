@@ -45,7 +45,7 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      {error && <ShowErrorLabel message={error} type="floating" />}
+      {error && <ShowErrorLabel message={error} type="floating" isError={true} />}
 
       {/* Hamburger Icon */}
       <FontAwesomeIcon icon={faBars} className="hamburger-icon" onClick={toggleSidebar} />

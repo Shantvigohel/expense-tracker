@@ -93,8 +93,9 @@ const AddExpense = () => {
       <div className="expense-form-wrapper">
         <h2 className="expense-form-title">Add New Expense</h2>
 
-        {error && <ShowErrorLabel message={error} type="floating" />}
-        {success && <ShowErrorLabel message={success} type="floating" />}
+        {error && <ShowErrorLabel message={error} type="floating" isError={true} />}
+        {success && <ShowErrorLabel message={success} type="floating" isError={false} />}
+
 
         <form className="expense-form" onSubmit={handleSubmit}>
           <input

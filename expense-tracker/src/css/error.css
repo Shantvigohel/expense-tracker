@@ -1,30 +1,53 @@
+/* Common styles */
+.floating-error,
+.form-error {
+  border-radius: 6px;
+  font-size: 0.9rem;
+  animation: ErrorfadeInSlide 0.3s ease;
+}
+
+/* Floating style */
 .floating-error {
   position: fixed;
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background-color: var(--error-color, #df7d7a);
-  color: var(--color-off-white);
   padding: 12px 20px;
-  border-radius: 6px;
-  font-size: 0.95rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 9999;
-  animation: fadeInSlideY 0.3s ease;
+  font-size: 0.95rem;
 }
 
-@keyframes fadeInSlideY {
+/* Form style */
+.form-error {
+  padding: 10px 16px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* Colors */
+.error {
+  background-color: var(--error-color, #df7d7a);
+  color: var(--color-off-white, #fff);
+}
+
+.success {
+  background-color: #a6c4e1; /* pastel blue */
+  color: var(--color-text-dark, #333);
+}
+
+/* Animations */
+@keyframes ErrorfadeInSlide {
   from {
     opacity: 0;
-    top: 10px;  
+    transform: translate(-50%, -10px);
   }
   to {
     opacity: 1;
-    top: 20px;
+    transform: translate(-50%, 0);
   }
 }
 
-/*-----------------media query------------------*/
 
 @media (max-width: 380px) {
   .floating-error {

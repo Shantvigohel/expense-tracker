@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import '../css/error.css';
-import '../css/form-error.css';
 
-const ShowErrorLabel = ({ message, type = 'floating' }) => {
+const ShowErrorLabel = ({ message, type = 'floating', isError = true }) => {
   if (!message) return null;
 
-  const className = type === 'floating' ? 'floating-error' : 'form-error';
+  const className = `${type === 'floating' ? 'floating-error' : 'form-error'} ${isError ? 'error' : 'success'}`;
 
   return (
     <div className={className}>

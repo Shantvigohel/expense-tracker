@@ -1,12 +1,14 @@
 // src/components/Login.jsx
 import React, { useState, useEffect } from 'react';
-import { signInWithEmailAndPassword,
-         signInWithPopup, 
-         sendPasswordResetEmail, 
-         setPersistence, 
-         browserLocalPersistence, 
-         browserSessionPersistence,
-         onAuthStateChanged } from 'firebase/auth';
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  sendPasswordResetEmail,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
+  onAuthStateChanged
+} from 'firebase/auth';
 import { auth } from '../firebase';
 import ShowErrorLabel from './ShowErrorLabel';
 import { useNavigate, Link } from 'react-router-dom';
@@ -35,7 +37,7 @@ const Login = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setIsAutoLoggingIn(true); 
+        setIsAutoLoggingIn(true);
         setInfoMessage('Auto-login successful');
 
         setTimeout(() => {
@@ -51,7 +53,7 @@ const Login = () => {
     const savedEmail = localStorage.getItem('rememberMeEmail');
     if (savedEmail) {
       setEmail(savedEmail);
-      setRememberMe(true); 
+      setRememberMe(true);
     }
   }, []);
 
@@ -67,9 +69,9 @@ const Login = () => {
       setResetMessage('Check your inbox for reset instructions.');
 
       setTimeout(() => {
-      setShowResetPopup(false);
-      setResetEmail('');
-      setResetMessage('');
+        setShowResetPopup(false);
+        setResetEmail('');
+        setResetMessage('');
       }, 1000);
 
     } catch (err) {
@@ -152,14 +154,16 @@ const Login = () => {
 
 
         <div className="login-messages">
-          {error && <ShowErrorLabel message={error} />}
-            {infoMessage && (
+          {error && <ShowErrorLabel message={error} isError={true} />}
+          {infoMessage && (
             <ShowErrorLabel
               message={infoMessage}
               type={infoMessage === 'Auto-login successful' ? 'inline' : 'floating'}
+              isError={false}
             />
           )}
         </div>
+
 
         {!isAutoLoggingIn && (
           <>
@@ -232,7 +236,13 @@ const Login = () => {
               style={{ width: '100%' }}
             />
 
-            {resetMessage && <ShowErrorLabel message={resetMessage} />}
+            {resetMessage && (
+              <ShowErrorLabel
+                message={resetMessage}
+                isError={resetMessage.toLowerCase().includes('fail')}
+              />
+            )}
+
 
             <div className="popup-actions">
               <button className="login-button" onClick={handlePasswordReset}>
@@ -246,11 +256,11 @@ const Login = () => {
                 Cancel
               </button>
             </div>
+          </div>
         </div>
-      </div>
-    )}
+      )}
     </div>
   );
 };
 
-export default Login;
+export default Login;  

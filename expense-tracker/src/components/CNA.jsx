@@ -105,7 +105,7 @@ const CNA = () => {
           className="login-input"
         />
 
-        {error && <ShowErrorLabel message={error} />}
+        {error && <ShowErrorLabel message={error} isError={true} />}
 
         <button type="submit" className="login-button">
           Create Account

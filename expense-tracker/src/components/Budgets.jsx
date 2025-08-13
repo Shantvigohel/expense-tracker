@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { collection, onSnapshot, query, where, doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
+import { collection, onSnapshot, doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../firebase';
+import ShowErrorLabel from './ShowErrorLabel';
 import '../css/Budgets.css';
 
 const Budgets = () => {
@@ -14,11 +15,11 @@ const Budgets = () => {
   const [showSavingModal, setShowSavingModal] = useState(false);
   const [earningAmount, setEarningAmount] = useState('');
   const [savingAmount, setSavingAmount] = useState('');
+  const [feedback, setFeedback] = useState(null); // { message: '', isError: boolean }
 
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [showExpensePopup, setShowExpensePopup] = useState(false);
 
-  // New: confirmation modal state
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const today = new Date();
@@ -27,7 +28,14 @@ const Budgets = () => {
 
   const [user, authLoading] = useAuthState(auth);
 
-  // Fetch user's budget & saving goal on mount
+  // auto-dismiss feedback
+  useEffect(() => {
+    if (!feedback) return;
+    const t = setTimeout(() => setFeedback(null), 2500);
+    return () => clearTimeout(t);
+  }, [feedback]);
+
+  // Fetch user's budget & saving goal
   useEffect(() => {
     if (authLoading || !user) return;
 
@@ -43,11 +51,12 @@ const Budgets = () => {
         }
       } catch (err) {
         console.error('Error fetching user goals:', err);
+        setFeedback({ message: 'Failed to load goals.', isError: true });
       }
     };
 
     fetchGoals();
-  }, [user, authLoading]);
+  }, [user, authLoading, db]);
 
   // Fetch user's expenses
   useEffect(() => {
@@ -63,19 +72,21 @@ const Budgets = () => {
           typeof value?.toMillis === 'function' ? value.toMillis() : new Date(value).getTime();
 
         const items = snapshot.docs
-          .map((doc) => ({ id: doc.id, ...doc.data() }))
+          .map((docItem) => ({ id: docItem.id, ...docItem.data() }))
           .sort((a, b) => getMs(b.createdAt) - getMs(a.createdAt));
+
         setExpenses(items);
         setLoading(false);
       },
       (err) => {
         console.error('Error fetching expenses:', err);
         setLoading(false);
+        setFeedback({ message: 'Failed to load expenses.', isError: true });
       }
     );
 
     return () => unsubscribe();
-  }, [user, authLoading]);
+  }, [user, authLoading, db]);
 
   const formatAmount = (amount) => `₹${Number(amount).toFixed(2)}`;
 
@@ -87,7 +98,6 @@ const Budgets = () => {
 
   const formatRelativeDate = (value) => {
     if (!value) return 'Unknown date';
-
     const date = typeof value?.toDate === 'function' ? value.toDate() : new Date(value);
     const now = new Date();
     const yest = new Date();
@@ -108,13 +118,18 @@ const Budgets = () => {
     setEarningAmount('');
     setShowEarningModal(false);
 
-    if (!user) return;
+    if (!user) {
+      setFeedback({ message: 'Please log in to save your budget.', isError: true });
+      return;
+    }
 
     try {
       const infoRef = doc(db, 'users', user.uid, 'info', 'main');
       await setDoc(infoRef, { budget: budgetAmount }, { merge: true });
+      setFeedback({ message: 'Budget updated successfully!', isError: false });
     } catch (err) {
       console.error('Error saving budget:', err);
+      setFeedback({ message: 'Failed to save budget.', isError: true });
     }
   };
 
@@ -125,13 +140,18 @@ const Budgets = () => {
     setSavingAmount('');
     setShowSavingModal(false);
 
-    if (!user) return;
+    if (!user) {
+      setFeedback({ message: 'Please log in to save your goal.', isError: true });
+      return;
+    }
 
     try {
       const infoRef = doc(db, 'users', user.uid, 'info', 'main');
       await setDoc(infoRef, { savingGoal: savingValue }, { merge: true });
+      setFeedback({ message: 'Saving goal updated!', isError: false });
     } catch (err) {
       console.error('Error saving savingGoal:', err);
+      setFeedback({ message: 'Failed to save saving goal.', isError: true });
     }
   };
 
@@ -167,12 +187,10 @@ const Budgets = () => {
     setSelectedExpense(null);
   };
 
-  // New: open delete confirmation
   const handleDeleteClick = () => {
     setShowDeleteConfirm(true);
   };
 
-  // New: delete expense
   const confirmDeleteExpense = async () => {
     if (!user || !selectedExpense) return;
     try {
@@ -180,14 +198,15 @@ const Budgets = () => {
       setShowDeleteConfirm(false);
       setShowExpensePopup(false);
       setSelectedExpense(null);
+      setFeedback({ message: 'Expense deleted.', isError: false });
     } catch (err) {
       console.error('Error deleting expense:', err);
+      setFeedback({ message: 'Failed to delete expense.', isError: true });
     }
   };
 
   const formatDate = (value) => {
     if (!value) return 'Unknown date';
-
     const date = typeof value?.toDate === 'function' ? value.toDate() : new Date(value);
     return date.toLocaleDateString('en-US', {
       weekday: 'long',
@@ -199,6 +218,14 @@ const Budgets = () => {
 
   return (
     <div className="budgets-container">
+      {feedback && (
+        <ShowErrorLabel
+          message={feedback.message}
+          type="floating"
+          isError={feedback.isError}
+        />
+      )}
+
       <div className="budgets-header">
         <h1>Budgets & Goals</h1>
         <p>Track of your monthly expenses</p>
