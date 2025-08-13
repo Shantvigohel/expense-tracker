@@ -67,7 +67,7 @@
 }
 
 .logout-btn:hover {
-  background-color: #bcd9f5;
+  background-color: var(--color-pink);
 }
 
 /* Modal overlay */

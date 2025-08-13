@@ -1,9 +1,9 @@
 // Dashboard.jsx
 import React, { useEffect, useState } from 'react';
-import { collection, onSnapshot, query, where, deleteDoc, doc } from 'firebase/firestore';
+import { collection, onSnapshot, doc, getDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faCalendar, faWallet, faChartLine } from '@fortawesome/free-solid-svg-icons';
+import { faCalendar, faWallet, faChartLine } from '@fortawesome/free-solid-svg-icons';
 import { auth, db } from '../firebase';
 import '../css/dashboard.css';
 
@@ -14,21 +14,17 @@ const Dashboard = () => {
   const [user, authLoading] = useAuthState(auth);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [showExpensePopup, setShowExpensePopup] = useState(false);
-  const [deleting, setDeleting] = useState(false);
 
   const today = new Date();
   const currentMonthLabel = today.toLocaleString('default', { month: 'long' });
   const currentYear = today.getFullYear();
 
+  // Fetch expenses from Firestore
   useEffect(() => {
-    if (authLoading) return;
-    if (!user) return;
+    if (authLoading || !user) return;
 
     setLoading(true);
-    const expensesQuery = query(
-      collection(db, 'expenses'),
-      where('uid', '==', user.uid)
-    );
+    const expensesQuery = collection(db, 'users', user.uid, 'expenses');
 
     const unsubscribe = onSnapshot(
       expensesQuery,
@@ -39,7 +35,7 @@ const Dashboard = () => {
         const items = snapshot.docs
           .map((doc) => ({ id: doc.id, ...doc.data() }))
           .sort((a, b) => getMs(b.createdAt) - getMs(a.createdAt));
-        
+
         setExpenses(items);
         setLoading(false);
       },
@@ -52,30 +48,51 @@ const Dashboard = () => {
     return () => unsubscribe();
   }, [user, authLoading]);
 
-  // Get budget from localStorage (since Budgets.jsx stores it locally)
+  // Fetch budget and savings from Firestore
   useEffect(() => {
-    const storedBudget = localStorage.getItem('monthlyBudget');
-    if (storedBudget) {
-      setBudget(parseFloat(storedBudget));
-    }
+    if (!user || authLoading) return;
 
-    // Listen for budget changes
-    const handleStorageChange = (e) => {
-      if (e.key === 'monthlyBudget') {
-        setBudget(parseFloat(e.newValue || 0));
+    const fetchBudgetAndSavings = async () => {
+      try {
+        const budgetDocRef = doc(db, 'users', user.uid, 'info', 'main');
+        const budgetSnap = await getDoc(budgetDocRef);
+
+        if (budgetSnap.exists()) {
+          const data = budgetSnap.data();
+
+          // normalize and fallback: check both 'savingGoal' (used in Budgets.jsx)
+          // and 'savings' (in case older docs used that field)
+          const budgetValue = parseFloat(data.budget ?? 0) || 0;
+          const savingsValue =
+            parseFloat(
+              // prefer savingGoal, fall back to savings, else 0
+              (data.savingGoal ?? data.savings ?? 0)
+            ) || 0;
+
+          const adjustedBudget = budgetValue - savingsValue;
+
+          setBudget(adjustedBudget);
+        } else {
+          setBudget(0);
+        }
+      } catch (err) {
+        console.error('Error fetching budget & savings:', err);
+        setBudget(0);
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+    fetchBudgetAndSavings();
+  }, [user, authLoading]);
+
+
+
 
   // Calculate total expenses for current month
   const getCurrentMonthExpenses = () => {
     const currentMonth = today.getMonth();
     const currentYear = today.getFullYear();
-    
-    return expenses.filter(expense => {
+
+    return expenses.filter((expense) => {
       const expenseDate = expense.date ? new Date(expense.date) : new Date(expense.createdAt);
       return expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear;
     });
@@ -88,29 +105,19 @@ const Dashboard = () => {
   // Calculate daily average spending
   const getDailyAverage = () => {
     if (currentMonthExpenses.length === 0) return 0;
-    
-    const currentMonth = today.getMonth();
-    const currentYear = today.getFullYear();
-    const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
     const currentDay = today.getDate();
-    
     return totalExpenses / currentDay;
   };
 
-  // Calculate remaining budget
-  const getRemainingBudget = () => {
-    return Math.max(0, budget - totalExpenses);
-  };
+  const getRemainingBudget = () => Math.max(0, budget - totalExpenses);
 
   const dailyAverage = getDailyAverage();
   const remainingBudget = getRemainingBudget();
 
   const formatAmount = (amount) => `₹${Number(amount).toFixed(2)}`;
 
-  // Helper functions for recent expenses (same as Budgets.jsx)
   const formatRelativeDate = (value) => {
     if (!value) return 'Unknown date';
-
     const date = typeof value?.toDate === 'function' ? value.toDate() : new Date(value);
     const now = new Date();
     const yest = new Date();
@@ -126,44 +133,25 @@ const Dashboard = () => {
 
   const formatDate = (value) => {
     if (!value) return 'Unknown date';
-    
     const date = typeof value?.toDate === 'function' ? value.toDate() : new Date(value);
     return date.toLocaleDateString('en-US', {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
-  // Handle expense item click (same as Budgets.jsx)
   const handleExpenseClick = (expense) => {
     setSelectedExpense(expense);
     setShowExpensePopup(true);
   };
 
-  // Close expense popup (same as Budgets.jsx)
   const closeExpensePopup = () => {
     setShowExpensePopup(false);
     setSelectedExpense(null);
   };
 
-  const handleDeleteSelectedExpense = async () => {
-    if (!selectedExpense) return;
-    const confirm = window.confirm('Delete this expense? This action cannot be undone.');
-    if (!confirm) return;
-    try {
-      setDeleting(true);
-      await deleteDoc(doc(db, 'expenses', selectedExpense.id));
-      setDeleting(false);
-      closeExpensePopup();
-    } catch (err) {
-      console.error('Failed to delete expense:', err);
-      setDeleting(false);
-    }
-  };
-
-  // Get recent 5 expenses
   const recentExpenses = expenses.slice(0, 5);
 
   return (
@@ -179,15 +167,33 @@ const Dashboard = () => {
             <h3 className="summary-title">Monthly Expenses</h3>
             <p className="summary-month">{currentMonthLabel} {currentYear}</p>
             <div className="budget-progress">
-              <span className="progress-text">{budgetUsage.toFixed(0)}% of budget used</span>
+              <span
+                className="progress-text"
+                style={{
+                  color: budgetUsage >= 100 ? "#ff4554" : "var(--color-text-dark)"
+                }}
+              >
+                {budgetUsage >= 100
+                  ? "No budget remaining"
+                  : `${budgetUsage.toFixed(0)}% of budget used`}
+              </span>
               <div className="progress-bar">
-                <div 
-                  className="progress-fill" 
-                  style={{ width: `${Math.min(budgetUsage, 100)}%` }}
+                <div
+                  className="progress-fill"
+                  style={{
+                    width: `${Math.min(budgetUsage, 100)}%`,
+                    background:
+                      budgetUsage >= 100
+                        ? "#ff4554"
+                        : "linear-gradient(90deg, var(--color-blue-muted) 0%, var(--color-blue-light) 100%)"
+                  }}
                 ></div>
               </div>
               <span className="budget-amount">Budget: {formatAmount(budget)}</span>
             </div>
+
+
+
           </div>
           <div className="summary-right">
             <span className="total-expenses-amount">{formatAmount(totalExpenses)}</span>
@@ -242,8 +248,8 @@ const Dashboard = () => {
             <div className="no-expenses">No expenses found</div>
           ) : (
             recentExpenses.map((item) => (
-              <div 
-                key={item.id} 
+              <div
+                key={item.id}
                 className="expense-item"
                 onClick={() => handleExpenseClick(item)}
                 style={{ cursor: 'pointer' }}
@@ -267,45 +273,44 @@ const Dashboard = () => {
               <h3>{selectedExpense.title}</h3>
               <button className="expense-popup-close" onClick={closeExpensePopup}>×</button>
             </div>
-            
+
             <div className="expense-popup-content">
               <div className="expense-popup-row">
                 <span className="expense-popup-label">Category:</span>
                 <span className="expense-popup-value">{selectedExpense.category}</span>
               </div>
-              
+
               <div className="expense-popup-row">
                 <span className="expense-popup-label">Amount:</span>
                 <span className="expense-popup-amount">-{formatAmount(selectedExpense.amount)}</span>
               </div>
-              
+
               <div className="expense-popup-row">
                 <span className="expense-popup-label">Date:</span>
                 <span className="expense-popup-value">{formatDate(selectedExpense.date)}</span>
               </div>
-              
+
               {selectedExpense.paymentMethod && (
                 <div className="expense-popup-row">
                   <span className="expense-popup-label">Payment Method:</span>
                   <span className="expense-popup-value">{selectedExpense.paymentMethod}</span>
                 </div>
               )}
-              
+
               {selectedExpense.notes && (
                 <div className="expense-popup-row">
                   <span className="expense-popup-label">Notes:</span>
                   <span className="expense-popup-value expense-popup-notes">{selectedExpense.notes}</span>
                 </div>
               )}
-              
+
               <div className="expense-popup-row">
                 <span className="expense-popup-label">Added:</span>
                 <span className="expense-popup-value">{formatDate(selectedExpense.createdAt)}</span>
               </div>
             </div>
-            
+
             <div className="expense-popup-footer">
-              <button className="expense-popup-delete-btn" onClick={handleDeleteSelectedExpense} disabled={deleting}>{deleting ? 'Deleting...' : 'Delete'}</button>
               <button className="expense-popup-close-btn" onClick={closeExpensePopup}>Close</button>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, query, where, doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../firebase';
 import '../css/Budgets.css';
@@ -8,7 +8,6 @@ const Budgets = () => {
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Local-only monthly goals (we can persist later if needed)
   const [earningGoal, setEarningGoal] = useState(null);
   const [savingGoal, setSavingGoal] = useState(null);
   const [showEarningModal, setShowEarningModal] = useState(false);
@@ -16,9 +15,11 @@ const Budgets = () => {
   const [earningAmount, setEarningAmount] = useState('');
   const [savingAmount, setSavingAmount] = useState('');
 
-  // New state for expense popup
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [showExpensePopup, setShowExpensePopup] = useState(false);
+
+  // New: confirmation modal state
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const today = new Date();
   const currentMonthLabel = today.toLocaleString('default', { month: 'long' });
@@ -26,17 +27,34 @@ const Budgets = () => {
 
   const [user, authLoading] = useAuthState(auth);
 
+  // Fetch user's budget & saving goal on mount
   useEffect(() => {
-    if (authLoading) return;
+    if (authLoading || !user) return;
 
-    // If user is not yet available, keep loading until auth provides it.
-    if (!user) return;
+    const fetchGoals = async () => {
+      try {
+        const infoRef = doc(db, 'users', user.uid, 'info', 'main');
+        const infoSnap = await getDoc(infoRef);
+
+        if (infoSnap.exists()) {
+          const data = infoSnap.data();
+          if (data.budget !== undefined) setEarningGoal(data.budget);
+          if (data.savingGoal !== undefined) setSavingGoal(data.savingGoal);
+        }
+      } catch (err) {
+        console.error('Error fetching user goals:', err);
+      }
+    };
+
+    fetchGoals();
+  }, [user, authLoading]);
+
+  // Fetch user's expenses
+  useEffect(() => {
+    if (authLoading || !user) return;
 
     setLoading(true);
-    const expensesQuery = query(
-      collection(db, 'expenses'),
-      where('uid', '==', user.uid)
-    );
+    const expensesQuery = collection(db, 'users', user.uid, 'expenses');
 
     const unsubscribe = onSnapshot(
       expensesQuery,
@@ -83,21 +101,38 @@ const Budgets = () => {
     return `${diffDays} days ago`;
   };
 
-  const handleSubmitEarning = () => {
+  const handleSubmitEarning = async () => {
     if (earningAmount === '') return;
     const budgetAmount = Number(earningAmount);
     setEarningGoal(budgetAmount);
-    // Store budget in localStorage for Dashboard to access
-    localStorage.setItem('monthlyBudget', budgetAmount.toString());
     setEarningAmount('');
     setShowEarningModal(false);
+
+    if (!user) return;
+
+    try {
+      const infoRef = doc(db, 'users', user.uid, 'info', 'main');
+      await setDoc(infoRef, { budget: budgetAmount }, { merge: true });
+    } catch (err) {
+      console.error('Error saving budget:', err);
+    }
   };
 
-  const handleSubmitSaving = () => {
+  const handleSubmitSaving = async () => {
     if (savingAmount === '') return;
-    setSavingGoal(Number(savingAmount));
+    const savingValue = Number(savingAmount);
+    setSavingGoal(savingValue);
     setSavingAmount('');
     setShowSavingModal(false);
+
+    if (!user) return;
+
+    try {
+      const infoRef = doc(db, 'users', user.uid, 'info', 'main');
+      await setDoc(infoRef, { savingGoal: savingValue }, { merge: true });
+    } catch (err) {
+      console.error('Error saving savingGoal:', err);
+    }
   };
 
   const handleKeyPress = (e, submitFunction) => {
@@ -111,10 +146,10 @@ const Budgets = () => {
       setShowEarningModal(false);
       setShowSavingModal(false);
       setShowExpensePopup(false);
+      setShowDeleteConfirm(false);
     }
   };
 
-  // Add keyboard event listener for escape key
   useEffect(() => {
     document.addEventListener('keydown', handleEscape);
     return () => {
@@ -122,22 +157,37 @@ const Budgets = () => {
     };
   }, []);
 
-  // New function to handle expense item click
   const handleExpenseClick = (expense) => {
     setSelectedExpense(expense);
     setShowExpensePopup(true);
   };
 
-  // New function to close expense popup
   const closeExpensePopup = () => {
     setShowExpensePopup(false);
     setSelectedExpense(null);
   };
 
-  // New function to format date for display
+  // New: open delete confirmation
+  const handleDeleteClick = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  // New: delete expense
+  const confirmDeleteExpense = async () => {
+    if (!user || !selectedExpense) return;
+    try {
+      await deleteDoc(doc(db, 'users', user.uid, 'expenses', selectedExpense.id));
+      setShowDeleteConfirm(false);
+      setShowExpensePopup(false);
+      setSelectedExpense(null);
+    } catch (err) {
+      console.error('Error deleting expense:', err);
+    }
+  };
+
   const formatDate = (value) => {
     if (!value) return 'Unknown date';
-    
+
     const date = typeof value?.toDate === 'function' ? value.toDate() : new Date(value);
     return date.toLocaleDateString('en-US', {
       weekday: 'long',
@@ -180,7 +230,6 @@ const Budgets = () => {
         {/* Expenses card */}
         <div className="expenses-card">
           <h3 className="expenses-title">Expenses</h3>
-          {/* Fixed-height scroll area; style to overflow-y: auto in CSS later */}
           <div className="expenses-list">
             {loading ? (
               <div className="loading">Loading expenses...</div>
@@ -188,8 +237,8 @@ const Budgets = () => {
               <div className="no-expenses">No expenses found</div>
             ) : (
               expenses.map((item) => (
-                <div 
-                  key={item.id} 
+                <div
+                  key={item.id}
                   className="expense-item"
                   onClick={() => handleExpenseClick(item)}
                   style={{ cursor: 'pointer' }}
@@ -264,45 +313,60 @@ const Budgets = () => {
               <h3>{selectedExpense.title}</h3>
               <button className="expense-popup-close" onClick={closeExpensePopup}>×</button>
             </div>
-            
+
             <div className="expense-popup-content">
               <div className="expense-popup-row">
                 <span className="expense-popup-label">Category:</span>
                 <span className="expense-popup-value">{selectedExpense.category}</span>
               </div>
-              
+
               <div className="expense-popup-row">
                 <span className="expense-popup-label">Amount:</span>
                 <span className="expense-popup-amount">-{formatAmount(selectedExpense.amount)}</span>
               </div>
-              
+
               <div className="expense-popup-row">
                 <span className="expense-popup-label">Date:</span>
                 <span className="expense-popup-value">{formatDate(selectedExpense.date)}</span>
               </div>
-              
+
               {selectedExpense.paymentMethod && (
                 <div className="expense-popup-row">
                   <span className="expense-popup-label">Payment Method:</span>
                   <span className="expense-popup-value">{selectedExpense.paymentMethod}</span>
                 </div>
               )}
-              
+
               {selectedExpense.notes && (
                 <div className="expense-popup-row">
                   <span className="expense-popup-label">Notes:</span>
                   <span className="expense-popup-value expense-popup-notes">{selectedExpense.notes}</span>
                 </div>
               )}
-              
+
               <div className="expense-popup-row">
                 <span className="expense-popup-label">Added:</span>
                 <span className="expense-popup-value">{formatDate(selectedExpense.createdAt)}</span>
               </div>
             </div>
-            
+
             <div className="expense-popup-footer">
+              <button className="expense-popup-delete-btn" onClick={handleDeleteClick}>Delete</button>
               <button className="expense-popup-close-btn" onClick={closeExpensePopup}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteConfirm && (
+        <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+          <div className="modal small" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+            <h3>Confirm Delete</h3>
+            <p>Are you sure you want to delete this entry?</p>
+            <div className="modal-buttons">
+              <button className="modal-cancel" onClick={() => setShowDeleteConfirm(false)}>No</button>
+              <button className="modal-submit" onClick={confirmDeleteExpense}>Yes</button>
             </div>
           </div>
         </div>

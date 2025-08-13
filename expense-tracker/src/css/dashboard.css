@@ -119,10 +119,16 @@
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-blue-muted) 0%, var(--color-blue-light) 100%);
   border-radius: 4px;
   transition: width 0.3s ease;
 }
+
+.progress-fill {
+  height: 8px;
+  border-radius: 4px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
 
 .budget-amount {
   font-size: 0.875rem;

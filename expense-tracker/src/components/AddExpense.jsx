@@ -46,11 +46,10 @@ const AddExpense = () => {
     const { title, category, amount, date } = form;
 
     if (!title || !category || !amount || !date) {
-      setError(`Please fill in all required fields.`); // unique value each time
+      setError(`Please fill in all required fields.`);
       setTimeout(() => setError(''), 2000);
       return;
     }
-
 
     const user = auth.currentUser;
     if (!user) {
@@ -59,10 +58,12 @@ const AddExpense = () => {
     }
 
     try {
-      await addDoc(collection(db, 'expenses'), {
+      // Create or reference the subcollection for the current user
+      const expensesRef = collection(db, 'users', user.uid, 'expenses');
+
+      await addDoc(expensesRef, {
         ...form,
         amount: parseFloat(form.amount),
-        uid: user.uid,
         createdAt: new Date(),
       });
 
@@ -85,6 +86,7 @@ const AddExpense = () => {
       setSuccess('');
     }, 2000);
   };
+
 
   return (
     <div className="add-expense-container">
@@ -130,7 +132,7 @@ const AddExpense = () => {
 
           <textarea
             name="notes"
-            placeholder="Notes (optional)"
+            placeholder="Notes (optional & keep it short)"
             value={form.notes}
             onChange={handleChange}
             className="expense-input"
