@@ -50,9 +50,7 @@ const Home = () => {
       {/* Hamburger Icon */}
       <FontAwesomeIcon icon={faBars} className="hamburger-icon" onClick={toggleSidebar} />
       
-      {/* Mobile App Name - removed as requested */}
-
-      {/* Overlay - only show when sidebar is open on mobile */}
+      
       {isSidebarOpen && <div className="overlay" onClick={closeSidebar}></div>}
 
       {/* Sidebar */}

@@ -158,7 +158,7 @@ const Login = () => {
           {infoMessage && (
             <ShowErrorLabel
               message={infoMessage}
-              type={infoMessage === 'Auto-login successful' ? 'inline' : 'floating'}
+              type={'floating'}
               isError={false}
             />
           )}
