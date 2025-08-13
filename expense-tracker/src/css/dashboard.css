@@ -597,7 +597,7 @@
     text-align: center;
   }
   
-  .summary-box {
+  .dashboard-box.summary-box {
     padding: 1.25rem;
     margin-bottom: 1.25rem;
   }
